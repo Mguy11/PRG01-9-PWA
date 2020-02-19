@@ -11,11 +11,15 @@ self.addEventListener('install', async e => {
   cache.addAll(staticAssets);
 });
 
+self.addEventListener('activate', e => {
+  e.waitUntil(self.ClientRectList.claim());
+});
+
 self.addEventListener('fetch', e => {
   const req = e.request;
   const url = new URL(req.url);
 
-  if(url.origin == location.origin) {
+  if(url.origin === location.origin) {
     e.respondWith(cacheFirst(req));
   } else {
     e.respondWith(networkFirst(req));
@@ -33,6 +37,7 @@ async function networkFirst(req) {
   try {
     const res = await fetch(req);
     dynamicCache .put(req, res.clone());
+    return res;
   } catch (error) {
     const cachedResponse = await dynamicCache.match(req);
     return cachedResponse || await caches.match('./fallback.json')
