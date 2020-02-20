@@ -11,9 +11,9 @@ self.addEventListener('install', async e => {
   cache.addAll(staticAssets);
 });
 
-self.addEventListener('activate', e => {
-  e.waitUntil(self.ClientRectList.claim());
-});
+// self.addEventListener('activate', e => {
+//   e.waitUntil(self.ClientRectList.claim());
+// });
 
 self.addEventListener('fetch', e => {
   const req = e.request;

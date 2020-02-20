@@ -19,27 +19,39 @@ async function updateShowcases() {
 
   main.innerHTML = json.projects.map(createProject).join('\n');
 
-  var db = window.indexedDB.open("showcaseDB", 1);
-  db.onerror = function(event){
-      console.log('error');
-  }
-  db.oncomplete = function(){
-      console.log('complete');
-  }
-  db.onsuccess = function(){
-      console.log('succes');
-      console.log(db);
-  }
-  db.onupgradeneeded = function(event){
-    console.log('upgrade!');
-    console.log(event.target);
-    // let objectStore = db.createObjectStore("project", { keyPath: "id" });
+  const dbName = "showcaseDB";
+  let dbRequest = indexedDB.open(dbName, 2);
 
-    //   for (let i in jsonData) {
-    //       objectStore.add(jsonData.projects[i]);
-    //   }
-  }
+  dbRequest.onerror = function(e) {
+    db.onerror = function(e){
+      console.log('error'); 
+    }
+  };
+
+  
+  dbRequest.onupgradeneeded = function(e) {
+    db = e.target.result;
+    console.log(db);
+    
+    let objectStore = db.createObjectStore("projects", { keyPath: "_id"});
+    
+    objectStore.createIndex("_id", "_id", { unique: true });
+    objectStore.createIndex("title", "title", { unique: false });
+    objectStore.createIndex("author", "author", { unique: false });
+    objectStore.createIndex("year", "year", { unique: false });
+    objectStore.createIndex("description", "description", { unique: false });
+
+    objectStore.transaction.oncomplete = function(e) {
+  
+      var projectObjectStore = db.transaction("projects", "readwrite").objectStore("projects");
+      json.projects.forEach(function(project) {
+        projectObjectStore.add(project);
+      });
+    };
+  };
+  
 }
+
 
 function createProject(project) {
   return `
