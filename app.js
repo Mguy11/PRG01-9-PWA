@@ -81,6 +81,7 @@ function createProject(project) {
           <h2>${project.title}</h2>
           <img src="https://cmgt.hr.nl:8000/${project.headerImage}">
           <p>${project.description}</p>
+          <p>test</p>
         </a>
       </div>
     </div>
