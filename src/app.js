@@ -77,11 +77,12 @@ function createProject(project) {
   <div class="container">
     <div class="card-panel recipe white row">
       <div class="project">
-        <a href="https://cmgt.hr.nl:8000/api/project/${project.title}">
+        <a href="https://cmgt.hr.nl:8000/api/project/${project.slug}">
           <h2>${project.title}</h2>
           <img src="https://cmgt.hr.nl:8000/${project.headerImage}">
           <p>${project.description}</p>
-          <p>test</p>
+          <hr/>
+          <p class="blue-text">${project.tags}</p>
         </a>
       </div>
     </div>
