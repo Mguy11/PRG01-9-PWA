@@ -52,21 +52,3 @@ async function networkFirst(req) {
   }
 }
 
-async function indexedApi(req) {
-  try {
-      const res = await fetch(req)
-
-      localforage.setItem(req.url, res.clone().json()).catch((err) => {
-          console.error(err);
-      })
-      return res
-
-  } catch (error) {
-      const indexedRes = await localforage.getItem(req.url)
-      if (indexedRes) {
-          return new Response(indexedRes)
-      } else {
-          return await caches.match('./fallback.json')
-      }
-  }
-}

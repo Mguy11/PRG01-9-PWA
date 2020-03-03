@@ -24,6 +24,7 @@ window.addEventListener('load', e => {
 });
 
 async function loadShowcases() {
+  console.log("meme")
   const res = await fetch(`https://cmgt.hr.nl:8000/api/projects/`);
   const json = await res.json();
 
