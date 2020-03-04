@@ -44,6 +44,7 @@ async function networkFirst(req) {
   try {
     const res = await fetch(req);
     dynamicCache.put(req, res.clone());
+    return res;
     console.log("try")
   } catch (error) {
     console.log("catch")
