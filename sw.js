@@ -39,36 +39,15 @@ self.addEventListener('fetch', e => {
   const url = new URL(req.url);
 
   if(url.origin === location.origin) {
-    console.log("chacheFirst")
+    console.log("chacheFirst-test")
     e.respondWith(cacheFirst(req));
-  // } else if (url.pathname === "/api/projects/tags/") {
-  //   e.respondWith(networkOnly(req));
+  } else if (url.pathname === "/api/projects/tags/") {
+    e.respondWith(networkOnly(req));
   } else {
     console.log("networkFirst")
     e.respondWith(networkFirst(req));
   }
 });
-
-// async function cacheFirst(req) {
-//   const cachedResponse = await caches.match(req);
-//   console.log(cachedResponse)
-//   return cachedResponse || fetch(req);
-// } 
-
-// async function networkFirst(req) {
-//   const dynamicCache = await caches.open('showcase-dynamic');
-
-//   try {
-//     const res = await fetch(req);
-//     dynamicCache.put(req, res.clone());
-//     console.log("try")
-//     return res;
-//   } catch (error) {
-//     console.log("catch")
-//     const cachedResponse = await dynamicCache.match(req);
-//     return cachedResponse;
-//   }
-// }
 
 async function cacheFirst(req) {
   const cachedResponse = await caches.match(req)
