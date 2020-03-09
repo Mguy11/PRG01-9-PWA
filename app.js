@@ -1,3 +1,9 @@
+const main = document.querySelector('main');
+const imageUrl = 'https://cmgt.hr.nl:8000/';
+
+window.addEventListener('load', (e) => {
+  loadShowcases();
+});
 let online = window.navigator.onLine;
 
 window.addEventListener('load', e => {
@@ -17,8 +23,6 @@ window.addEventListener('load', e => {
     console.log("Your browser supports IndexedDB")
   }
   
-  loadShowcases();
-
   if (navigator.onLine) {
     console.log("online");
     fetch("https://cmgt.hr.nl:8000/api/projects/tags")
@@ -46,36 +50,22 @@ async function loadShowcases() {
   const res = await fetch(`https://cmgt.hr.nl:8000/api/projects/`);
   const json = await res.json();
 
-  json.projects.map(createProject);
-  json.projects.forEach((project) => {
-    localforage.setItem(project._id, project).catch((err) =>{
-      console.log(err);
-    });
-  });
+  main.innerHTML = json.projects.map(createProject).join('\n');
 }
 
 function createProject(project) {
-  localforage
-  .getItem(project._id)
-  .then(() => {
-    document.querySelector("main").insertAdjacentHTML(
-      "afterbegin",
-      `<div class="container">
-        <div class="card-panel recipe white row">
-          <div class="project">
-            <div>
-              <h2>${project.title}</h2>
-              <img src="https://cmgt.hr.nl:8000/${project.headerImage}">
-              <p>${project.description}</p>
-              <hr/>
-              <p class="blue-text">${project.tags}</p>
+  return `<div class="container">
+          <div class="card-panel recipe white row">
+            <div class="project">
+              <div>
+                <h2>${project.title}</h2>
+                <img src="https://cmgt.hr.nl:8000/${project.headerImage}">
+                <p>${project.description}</p>
+                <hr/>
+                <p class="blue-text">${project.tags}</p>
+              </div>
             </div>
           </div>
-        </div>
-      </div>`
-    );
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+        </div>`
+  
 }

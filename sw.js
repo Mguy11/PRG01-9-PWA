@@ -53,16 +53,24 @@ async function cacheFirst(req) {
 }
 
 async function networkFirst(req) {
-  const dynamicCache = await caches.open('dynamicCacheName');
-
   try {
-    const res = await fetch(req)
-    dynamicCache.put(req, res.clone())
-    console.log("Updated dynamic cache and returning fetch result")
+    const res = await fetch(req);
+    const json = await res.json();
+
+    console.log(json.projects)
+
+    json.projects.forEach((project) => {
+      localforage.setItem(project._id, project).catch((err) => {
+          // This code runs if there were any errors
+          console.log(err);
+      });
+    });
+    console.log("Updated indexedDB and returning fetch result");
     return res
   } catch (error) {
-    const cachedRes = await dynamicCache.match(req)
-    console.log("No network so returning dynamic cache result")
+    //const indexedRes = await localforage.getItem(req.url)
+    console.log(error)
+    cachedRes = console.log("No network so returning dynamic cache result")
     return cachedRes
   }
 }
