@@ -1,17 +1,7 @@
-//importScripts("./localforage.js");
-
-const main = document.querySelector('main');
-const dbName = "showcaseDB";
-const indexedDB = window.indexedDB ||
-                  window.webkitIndexedDB ||
-                  window.msIndexedDB ||
-                  window.mozIndexedDB;
-                  
 let online = window.navigator.onLine;
 
 window.addEventListener('load', e => {
-  loadShowcases();
-
+  
   if('serviceWorker' in navigator) {
     try {
       navigator.serviceWorker.register('sw.js');
@@ -20,12 +10,14 @@ window.addEventListener('load', e => {
       console.log(`SW registration failed`);
     }
   }
-
+  
   if (!window.indexedDB) {
     console.log("Your browser does not support IndexedDB");
   }else{
     console.log("Your browser supports IndexedDB")
   }
+  
+  loadShowcases();
 
   if (navigator.onLine) {
     console.log("online");
@@ -41,7 +33,6 @@ window.addEventListener('load', e => {
                     <span class="tag-text">${data.tags[i]}</span>
                    </div>`;
         }
-        console.log(text)
         document.querySelector(".status-tags").innerHTML = text;
       });
   } else {
@@ -64,7 +55,6 @@ async function loadShowcases() {
 }
 
 function createProject(project) {
-
   localforage
   .getItem(project._id)
   .then(() => {

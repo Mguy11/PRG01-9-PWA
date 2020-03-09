@@ -1,6 +1,7 @@
 importScripts("./localforage.js")
 
-const cacheName = 'v1';
+const staticCacheName = 'staticCache-v1';
+const dynamicCacheName = 'dynamicCache-v1';
 const cacheAssets = [
   './',
   './styles.css',
@@ -13,12 +14,12 @@ const cacheAssets = [
 ];
 
 self.addEventListener('install', async e => {
-  const cache = await caches.open('showcase-static');
+  const cache = await caches.open(staticCacheName);
   cache.addAll(cacheAssets);
 });
 
 self.addEventListener('activate', e => {
-  let cacheWhiteList = ['showcase-static']
+  let cacheWhiteList = ['staticCache-v1']
 
   e.waitUntil(
     caches.keys().then (cacheNames => {
@@ -52,14 +53,16 @@ async function cacheFirst(req) {
 }
 
 async function networkFirst(req) {
-  const dynamicCache = await caches.open('showcase-dynamic-v1');
+  const dynamicCache = await caches.open('dynamicCacheName');
 
   try {
     const res = await fetch(req)
     dynamicCache.put(req, res.clone())
+    console.log("Updated dynamic cache and returning fetch result")
     return res
   } catch (error) {
     const cachedRes = await dynamicCache.match(req)
+    console.log("No network so returning dynamic cache result")
     return cachedRes
   }
 }
