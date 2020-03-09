@@ -12,7 +12,6 @@ const cacheAssets = [
   'test.html'
 ];
 
-
 self.addEventListener('install', async e => {
   const cache = await caches.open('showcase-static');
   cache.addAll(cacheAssets);
@@ -41,8 +40,6 @@ self.addEventListener('fetch', e => {
   if(url.origin === location.origin) {
     console.log("chacheFirst-test")
     e.respondWith(cacheFirst(req));
-  } else if (url.pathname === "/api/projects/tags/") {
-    e.respondWith(networkOnly(req));
   } else {
     console.log("networkFirst")
     e.respondWith(networkFirst(req));
@@ -64,14 +61,5 @@ async function networkFirst(req) {
   } catch (error) {
     const cachedRes = await dynamicCache.match(req)
     return cachedRes
-  }
-}
-
-async function networkOnly(req) {
-  try {
-    const res = await fetch(req)
-    return res
-  } catch (error) {
-    return error
   }
 }

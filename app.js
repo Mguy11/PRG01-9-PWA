@@ -28,6 +28,7 @@ window.addEventListener('load', e => {
   }
 
   if (navigator.onLine) {
+    console.log("online");
     fetch("https://cmgt.hr.nl:8000/api/projects/tags")
       .then(res => {
         return res.json();
@@ -36,13 +37,16 @@ window.addEventListener('load', e => {
         var text = "";
 
         for (let i = 0; i < data.tags.length; i++) {
-          text += data.tags[i] + "<br>";
+          text += `<div class="tag">
+                    <span class="tag-text">${data.tags[i]}</span>
+                   </div>`;
         }
         console.log(text)
-        document.querySelector(".status").innerHTML = text;
+        document.querySelector(".status-tags").innerHTML = text;
       });
   } else {
-    document.querySelector(".status").innerHTML = "It seems the app is offline, sadlife";
+    console.log("offline");
+    document.querySelector(".status-tags").innerHTML = "It seems the app is offline, sadlife";
   }
 
 });
@@ -50,7 +54,6 @@ window.addEventListener('load', e => {
 async function loadShowcases() {
   const res = await fetch(`https://cmgt.hr.nl:8000/api/projects/`);
   const json = await res.json();
-  console.log(json)
 
   json.projects.map(createProject);
   json.projects.forEach((project) => {
