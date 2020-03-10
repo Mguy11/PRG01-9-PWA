@@ -1,7 +1,7 @@
 importScripts("./localforage.js")
 
 const staticCacheName = 'staticCache-v1';
-const dynamicCacheName = 'dynamicCache-v1';
+// const dynamicCacheName = 'dynamicCache-v1';
 const cacheAssets = [
   './',
   './styles.css',
@@ -41,6 +41,9 @@ self.addEventListener('fetch', e => {
   if(url.origin === location.origin) {
     console.log("chacheFirst-test")
     e.respondWith(cacheFirst(req));
+  } else if (url.pathname === "/api/projects/tags/") {
+    console.log("miep")
+    e.respondWith(networkOnly(req))
   } else {
     console.log("networkFirst")
     e.respondWith(networkFirst(req));
@@ -54,23 +57,38 @@ async function cacheFirst(req) {
 
 async function networkFirst(req) {
   try {
-    const res = await fetch(req);
-    const json = await res.json();
+    // const res = await fetch(req);
+    // const json = await res.json();
+    // const array = json.projects;
 
-    console.log(json.projects)
+    // //store data in IndexedDB using Localforage
+    // array.forEach((project) => {
+    //   localforage.setItem(project._id, project)
+    // });
+    console.log("meme")
+    return fetch(req)
 
-    json.projects.forEach((project) => {
-      localforage.setItem(project._id, project).catch((err) => {
-          // This code runs if there were any errors
-          console.log(err);
-      });
-    });
-    console.log("Updated indexedDB and returning fetch result");
+  } catch (error) {
+    // localforage.keys().then(function(keys) {
+    //   keys.forEach(async project => {
+    //     const returnedData = await localforage.getItem(project)
+    //     //console.log(returnedData)
+    //     console.log("lmao")
+    //     return returnedData;
+    //   })
+    // }).catch(function(err) {
+    //     // This code runs if there were any errors
+    //     console.log(err);
+    // });
+    console.log("fck")
+  }
+}
+
+async function networkOnly(req) {
+  try {
+    const res = await fetch(req)
     return res
   } catch (error) {
-    //const indexedRes = await localforage.getItem(req.url)
-    console.log(error)
-    cachedRes = console.log("No network so returning dynamic cache result")
-    return cachedRes
+    return error
   }
 }
