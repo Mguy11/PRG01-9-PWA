@@ -19,27 +19,11 @@ window.addEventListener('load', e => {
   }else{
     console.log("Your browser supports IndexedDB")
   }
-  
-  // if (navigator.onLine) {
-  //   console.log("online");
-  //   fetch("https://cmgt.hr.nl:8000/api/projects/tags")
-  //     .then(res => {
-  //       return res.json();
-  //     })
-  //     .then(data => {
-  //       var text = "";
 
-  //       for (let i = 0; i < data.tags.length; i++) {
-  //         text += `<div class="tag">
-  //                   <span class="tag-text">${data.tags[i]}</span>
-  //                  </div>`;
-  //       }
-  //       document.querySelector(".status-tags").innerHTML = text;
-  //     });
-  // } else {
-  //   console.log("offline");
-  //   document.querySelector(".status-tags").innerHTML = "It seems the app is offline, sadlife";
-  // }
+  if(navigator.onLine) {
+    console.log("lmao")
+    loadTags();
+  }
 
 });
 
@@ -48,6 +32,26 @@ async function loadShowcases() {
   const json = await res.json();
 
   main.innerHTML = json.projects.map(createProject).join('\n');
+}
+
+async function loadTags() {
+  try {
+    const res = await fetch("https://cmgt.hr.nl:8000/api/projects/tags/");
+    const data = await res.json();
+    let tags = data.tags;
+
+    var text = "";
+
+      for (let i = 0; i < tags.length; i++) {
+        text += `<div class="tag">
+                  <span class="tag-text">${data.tags[i]}</span>
+                 </div>`;
+      }
+      document.querySelector(".status-tags").innerHTML = text;
+  } catch (error) {
+    console.log("Network only resource failed to load");
+    document.querySelector(".status-tags").innerHTML = "It seems the app is offline, sadlife";
+  }
 }
 
 function createProject(project) {

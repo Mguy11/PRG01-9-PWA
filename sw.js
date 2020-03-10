@@ -38,10 +38,13 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   const url = new URL(req.url);
 
+  console.log(url)
+  console.log(url.pathname)
+
   if(url.origin === location.origin) {
     console.log("chacheFirst-test")
     e.respondWith(cacheFirst(req));
-  } else if (url.pathname === "/api/projects/tags/") {
+  } else if (url.pathname == "/api/projects/tags/") {
     console.log("miep")
     e.respondWith(networkOnly(req))
   } else {
@@ -57,30 +60,29 @@ async function cacheFirst(req) {
 
 async function networkFirst(req) {
   try {
-    // const res = await fetch(req);
-    // const json = await res.json();
-    // const array = json.projects;
+    const res = await fetch(req);
+    const json = await res.json();
+    const array = json.projects;
 
-    // //store data in IndexedDB using Localforage
-    // array.forEach((project) => {
-    //   localforage.setItem(project._id, project)
-    // });
-    console.log("meme")
+    //store data in IndexedDB using Localforage
+    array.forEach((project) => {
+      console.log("kek")
+      localforage.setItem(project._id, project)
+    });
     return fetch(req)
 
   } catch (error) {
-    // localforage.keys().then(function(keys) {
-    //   keys.forEach(async project => {
-    //     const returnedData = await localforage.getItem(project)
-    //     //console.log(returnedData)
-    //     console.log("lmao")
-    //     return returnedData;
-    //   })
-    // }).catch(function(err) {
-    //     // This code runs if there were any errors
-    //     console.log(err);
-    // });
-    console.log("fck")
+    localforage.keys().then(function(keys) {
+      keys.forEach(async project => {
+        const returnedData = await localforage.getItem(project)
+        //console.log(returnedData)
+        console.log("lmao")
+        return returnedData;
+      })
+    }).catch(function(err) {
+        // This code runs if there were any errors
+        console.log(err);
+    });
   }
 }
 
