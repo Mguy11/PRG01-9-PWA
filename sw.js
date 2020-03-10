@@ -58,11 +58,11 @@ async function networkFirst(req) {
   try {
     const res = await fetch(req)
     dynamicCache.put(req, res.clone())
-    console.log("Updated dynamic cache and returning fetch result")
+    console.log("Updated dynamic cache and returning fetch result" + "😃")
     return res
   } catch (error) {
     const cachedRes = await dynamicCache.match(req)
-    console.log("No network so returning dynamic cache result")
+    console.log("No network so returning dynamic cache result" + "😨")
     return cachedRes
   }
 }

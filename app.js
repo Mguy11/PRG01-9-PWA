@@ -1,4 +1,4 @@
-let online = window.navigator.onLine;
+const online = window.navigator.onLine;
 
 window.addEventListener('load', e => {
   
@@ -26,7 +26,7 @@ window.addEventListener('load', e => {
         return res.json();
       })
       .then(data => {
-        var text = "";
+        let text = "";
 
         for (let i = 0; i < data.tags.length; i++) {
           text += `<div class="tag">
@@ -37,7 +37,7 @@ window.addEventListener('load', e => {
       });
   } else {
     console.log("offline");
-    document.querySelector(".status-tags").innerHTML = "It seems the app is offline, sadlife";
+    document.querySelector(".status-tags").innerHTML = "It seems the app is offline, sadlife" + "😨";
   }
 
 });
